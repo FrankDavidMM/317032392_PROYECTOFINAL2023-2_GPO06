@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de origen\Shaders">
+      <UniqueIdentifier>{a8786a28-4848-469f-aa14-dab4ba46d066}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model.h">
@@ -20,8 +23,34 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MainPrueba.cpp">
+    <ClCompile Include="317032392_REPORTE09_GPO06.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\anim.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\anim.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\anim2.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\anim2.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\lamp2.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\lamp2.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\lighting.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\lighting.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
