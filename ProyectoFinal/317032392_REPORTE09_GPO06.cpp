@@ -230,15 +230,18 @@ int main()
 
 		// Point light 1
 		glm::vec3 lightColor;
-		lightColor.x = abs(sin(glfwGetTime() * Light1.x));
+		/*lightColor.x = abs(sin(glfwGetTime() * Light1.x));
 		lightColor.y = abs(sin(glfwGetTime() * Light1.y));
-		lightColor.z = abs(sin(glfwGetTime() * Light1.z));
+		lightColor.z = abs(sin(glfwGetTime() * Light1.z));*/
+		lightColor.x = Light1.x;
+		lightColor.y = Light1.y;
+		lightColor.z = Light1.z;
 
 
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x, lightColor.y, lightColor.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.7f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 1.8f);
@@ -303,30 +306,30 @@ int main()
 
 		glm::mat4 model(1);
 
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.75);
+		Cuadro.Draw(lightingShader);
+		glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
+
+		glBindVertexArray(0);
+
+		//// Also draw the lamp object, again binding the appropriate shader
+		//lampShader.Use();
+		//// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		//modelLoc = glGetUniformLocation(lampShader.Program, "model");
+		//viewLoc = glGetUniformLocation(lampShader.Program, "view");
+		//projLoc = glGetUniformLocation(lampShader.Program, "projection");
+		//// Set matrices
+		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
-		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.75);
-		//Cuadro.Draw(lightingShader);
-		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
-
-		glBindVertexArray(0);
-
-		// Also draw the lamp object, again binding the appropriate shader
-		lampShader.Use();
-		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		modelLoc = glGetUniformLocation(lampShader.Program, "model");
-		viewLoc = glGetUniformLocation(lampShader.Program, "view");
-		projLoc = glGetUniformLocation(lampShader.Program, "projection");
-		// Set matrices
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Cuadro.Draw(lampShader);
-		glBindVertexArray(0);
+		//model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Cuadro.Draw(lampShader);
+		//glBindVertexArray(0);
 
 		//Anim.Use();
 		//tiempo = glfwGetTime() * speed;
@@ -467,7 +470,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		active = !active;
 		if (active)
 		{
-			Light1 = glm::vec3(1.0f, 0.2f, 1.0f);
+			// Light1 = glm::vec3(1.0f, 0.2f, 1.0f);
+			Light1 = glm::vec3(2.0f, 2.0f, 2.0f);
 		}
 		else
 		{
