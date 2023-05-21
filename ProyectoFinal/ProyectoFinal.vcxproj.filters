@@ -47,6 +47,12 @@
     <None Include="Shaders\lighting.vs">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
+    <None Include="Shaders\ruido.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="Shaders\ruido.vs">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="317032392_PROYECTOFINAL2023-2_GPO06.cpp">

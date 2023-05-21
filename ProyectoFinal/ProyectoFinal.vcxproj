@@ -30,6 +30,8 @@
     <None Include="Shaders\lamp2.vs" />
     <None Include="Shaders\lighting.frag" />
     <None Include="Shaders\lighting.vs" />
+    <None Include="Shaders\ruido.frag" />
+    <None Include="Shaders\ruido.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="317032392_PROYECTOFINAL2023-2_GPO06.cpp" />

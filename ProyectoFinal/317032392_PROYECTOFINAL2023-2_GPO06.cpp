@@ -62,8 +62,13 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
 
 float AnimCua01 = 0.0f, rotCua01 = 0.0f, ContAnims01 = 0.0f, rotCua02 = 0.0f, ContAnims02 = 0.0f, rotMece = 0.0f;
-float rotPuerta01 = 0.0f;
+float rotPuerta01 = 0.0f, PantallaCo01 = 0.0f, PantallaCo02 = 0.0f;
 bool derMece = false, Apagador = false, Puerta01_move = false;
+
+float tiempo;
+
+float speed;
+float speed2;
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	glm::vec3(5,20,-6),
@@ -134,7 +139,8 @@ int main()
 	Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
 	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
-
+	Shader Anim("Shaders/anim2.vs", "Shaders/anim2.frag");
+	Shader Ruido("Shaders/ruido.vs", "Shaders/ruido.frag");
 	/*Model BotaDer((char*)"Models/Personaje/bota.obj");
 	Model PiernaDer((char*)"Models/Personaje/piernader.obj");
 	Model PiernaIzq((char*)"Models/Personaje/piernaizq.obj");
@@ -149,11 +155,13 @@ int main()
 	Model Techo((char*)"Models/PROYECTO/Techo_Piso.obj");
 	Model Ventanas((char*)"Models/PROYECTO/Ventanas.obj");
 	Model Puerta00((char*)"Models/PROYECTO/Puerta00.obj");
+	Model Cristal((char*)"Models/PROYECTO/Cristal.obj");
 
 	/*Objetos*/
 	Model Sillon01((char*)"Models/PROYECTO/SillonFlor.obj");
 	Model Sillon02((char*)"Models/PROYECTO/SillonTriple.obj");
 	Model Sillon03((char*)"Models/PROYECTO/SillonMadera01.obj");
+	Model Sillon04((char*)"Models/PROYECTO/SillonMadera02.obj");
 
 	Model Base_TV((char*)"Models/PROYECTO/Base_Tele.obj");
 	Model TV((char*)"Models/PROYECTO/Tele.obj");
@@ -162,6 +170,11 @@ int main()
 	Model Cuadro02((char*)"Models/PROYECTO/Cuadro02.obj");
 	Model Mecedora((char*)"Models/PROYECTO/Mecedora.obj");
 	Model Puerta01((char*)"Models/PROYECTO/Puerta01.obj");
+	Model Puerta02((char*)"Models/PROYECTO/Puerta02.obj");
+	Model Puerta03((char*)"Models/PROYECTO/Puerta03.obj");
+
+	Model Agua((char*)"Models/PROYECTO/Picina.obj");
+	Model Pantalla((char*)"Models/PROYECTO/Pantalla.obj");
 	// Build and compile our shader program
 
 	//Inicialización de KeyFrames
@@ -595,8 +608,24 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sillon03.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Sillon04.Draw(lightingShader);
+
+		//model = glm::mat4(1);
+
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "trans"), 1);
+		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 0.25);
+		//
+		//Cristal.Draw(lightingShader);
+
+		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
+		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
+
 		/*==================={ Animaciones }=====================*/
 		model = glm::mat4(1);
+
 		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3( 6.65f, 1.366f, -4.844f));
 		model = glm::translate(model, glm::vec3(0.0f, AnimCua01, 0.0f));
@@ -624,6 +653,20 @@ int main()
 		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta01.Draw(lightingShader);
+		
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(5.897f, 2.786f, -4.938f));
+		model = glm::rotate(model, glm::radians(-rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Puerta02.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(3.604f, 2.8f, -4.934f));
+		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Puerta03.Draw(lightingShader);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -637,6 +680,46 @@ int main()
 		glEnable(GL_DEPTH_TEST);
 		glBindVertexArray(0);
 
+
+		Anim.Use();
+		tiempo = glfwGetTime() * speed;
+		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		modelLoc = glGetUniformLocation(Anim.Program, "model");
+		viewLoc = glGetUniformLocation(Anim.Program, "view");
+		projLoc = glGetUniformLocation(Anim.Program, "projection");
+		// Set matrices
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
+		//Box.Draw(Anim);
+		Agua.Draw(Anim);
+		glBindVertexArray(0);
+
+		Ruido.Use();
+		tiempo = glfwGetTime() * speed2;
+		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		modelLoc = glGetUniformLocation(Ruido.Program, "model");
+		viewLoc = glGetUniformLocation(Ruido.Program, "view");
+		projLoc = glGetUniformLocation(Ruido.Program, "projection");
+		// Set matrices
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(Ruido.Program, "time"), tiempo);
+		//glUniform1f(glGetUniformLocation(Anim2.Program, "coords"), glm::vec2(0.0f, 1.0f));
+		glUniform1f(glGetUniformLocation(Ruido.Program, "textura01"), PantallaCo02);
+		glUniform1f(glGetUniformLocation(Ruido.Program, "textura02"), PantallaCo01);
+
+		//Box.Draw(Anim);
+		Pantalla.Draw(Ruido);
+		glBindVertexArray(0);
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
@@ -678,6 +761,7 @@ int main()
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
+
 		glDepthFunc(GL_LESS); // Set depth function back to default
 
 
@@ -820,11 +904,6 @@ void DoMovement()
 		ContAnims02 = 0.0f;
 	}
 
-	if (ContAnims02 == ContAnims01 || ContAnims01 == ContAnims02) {
-		ContAnims01 = 0.0f;
-		ContAnims02 = 0.0f;
-	}
-
 	if (rotMece >= -5.0f && derMece == false) {
 		rotMece -= 0.2f;
 		if (rotMece < -5.0f) {
@@ -875,4 +954,18 @@ void DoMovement()
 		}
 	}
 
+	if ( PantallaCo02 <= 1.0f && PantallaCo01 <= 1.0f ) {
+		PantallaCo02 += 0.2f;
+	}
+	else if (PantallaCo02 > 1.0f){
+		PantallaCo01 += 0.2f;
+		PantallaCo02 = 0.0f;
+	}
+	else {
+		PantallaCo01 = 0.0f;
+		PantallaCo02 = 0.0f;
+	}
+
+	speed2 = 0.002f;
+	speed = 1.0f;
 }
