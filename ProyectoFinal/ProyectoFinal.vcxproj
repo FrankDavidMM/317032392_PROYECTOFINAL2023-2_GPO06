@@ -22,9 +22,6 @@
     <ClInclude Include="Model.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="317032392_REPORTE09_GPO06.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shaders\anim.frag" />
     <None Include="Shaders\anim.vs" />
     <None Include="Shaders\anim2.frag" />
@@ -33,6 +30,9 @@
     <None Include="Shaders\lamp2.vs" />
     <None Include="Shaders\lighting.frag" />
     <None Include="Shaders\lighting.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainPrueba.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

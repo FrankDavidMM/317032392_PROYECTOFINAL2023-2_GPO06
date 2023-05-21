@@ -34,7 +34,7 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera  camera(glm::vec3(0.0f, 0.0f, 0.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 bool keys[1024];
@@ -51,10 +51,10 @@ float speed2;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(0.0f,0.0f, 0.0f),
-	glm::vec3(0.0f,0.0f, 0.0f),
-	glm::vec3(0.0f,0.0f,  0.0f),
-	glm::vec3(0.0f,0.0f, 0.0f)
+	glm::vec3(6.0f, 6.0f, 6.0f),
+	glm::vec3(0.0f, 0.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 0.0f),
+	glm::vec3(0.0f, 0.0f, 0.0f)
 };
 
 float vertices[] = {
@@ -166,8 +166,8 @@ int main()
 	//Model Piso((char*)"Models/Sea/Sea.obj");
 	//Model SV((char*)"Models/Sea/salvavidas.obj");
 	//Model Box((char*)"Models/Pruebas/box.obj");
-	Model Cuadro((char*)"Models/PROYECTO/Cuadro/CUADRO.obj");
-
+	//Model Cuadro((char*)"Models/PROYECTO/Cuadro/CUADRO.obj");
+	Model Base((char*)"Models/PROYECTO/BASE_FACHADA.obj");
 
 	// First, set the container's VAO (and VBO)
 	GLuint VBO, VAO;
@@ -243,8 +243,8 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x, lightColor.y, lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.7f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 1.8f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.5f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.001f);
 
 
 
@@ -288,7 +288,7 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
 
 		// Set material properties
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 16.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 40.0f);
 
 		// Create camera transformations
 		glm::mat4 view;
@@ -307,11 +307,11 @@ int main()
 		glm::mat4 model(1);
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
-		glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.75);
-		Cuadro.Draw(lightingShader);
+		//glUniform1i(glGetUniformLocation(lightingShader.Program, "activaTransparencia"), 0);
+		///glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 0.75);
+		Base.Draw(lightingShader);
 		glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
+		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
 
 		glBindVertexArray(0);
 
@@ -438,11 +438,13 @@ void DoMovement()
 		pointLightPositions[0].z += 0.01f;
 	}
 
-	if (true)
+	Light1 = glm::vec3(2.0f, 2.0f, 2.0f);
+	/*if (true)
 	{
+		Light1 = glm::vec3(2.0f, 2.0f, 2.0f);
 		speed = 1.5f;
 		speed2 = 0.7f;
-	}
+	}*/
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -465,19 +467,19 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		}
 	}
 
-	if (keys[GLFW_KEY_SPACE])
-	{
-		active = !active;
-		if (active)
-		{
-			// Light1 = glm::vec3(1.0f, 0.2f, 1.0f);
-			Light1 = glm::vec3(2.0f, 2.0f, 2.0f);
-		}
-		else
-		{
-			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
-		}
-	}
+	//if (keys[GLFW_KEY_SPACE])
+	//{
+	//	active = !active;
+	//	if (active)
+	//	{
+	//		// Light1 = glm::vec3(1.0f, 0.2f, 1.0f);
+	//		Light1 = glm::vec3(2.0f, 2.0f, 2.0f);
+	//	}
+	//	else
+	//	{
+	//		Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+	//	}
+	//}
 
 	/*if (true)
 	{

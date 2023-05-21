@@ -23,11 +23,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="317032392_REPORTE09_GPO06.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Shaders\anim.frag">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
@@ -52,5 +47,10 @@
     <None Include="Shaders\lighting.vs">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MainPrueba.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
