@@ -61,79 +61,19 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 // Keyframes
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
 
-#define MAX_FRAMES 9
-int i_max_steps = 190;
-int i_curr_steps = 0;
-typedef struct _frame
-{
-	//Variables para GUARDAR Key Frames
-	float posX;		//Variable para PosicionX
-	float posY;		//Variable para PosicionY
-	float posZ;		//Variable para PosicionZ
-	float incX;		//Variable para IncrementoX
-	float incY;		//Variable para IncrementoY
-	float incZ;		//Variable para IncrementoZ
-	float rotRodIzq;
-	float rotInc;
-
-}FRAME;
-
-FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 0;			//introducir datos
-bool play = false;
-int playIndex = 0;
-
+float AnimCua01 = 0.0f, rotCua01 = 0.0f, ContAnims01 = 0.0f, rotCua02 = 0.0f, ContAnims02 = 0.0f, rotMece = 0.0f;
+float rotPuerta01 = 0.0f;
+bool derMece = false, Apagador = false, Puerta01_move = false;
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
-	glm::vec3(0,0,0),
-	glm::vec3(6,15,6),
-	glm::vec3(0,0,0),
+	glm::vec3(5,20,-6),
+	glm::vec3(5,20,6),
+	glm::vec3(7.5,2,-2.5),
 	glm::vec3(0,0,0)
 };
 
+glm::vec3 Light1;
 glm::vec3 LightP1;
-
-
-
-
-void saveFrame(void)
-{
-
-	printf("posx %f\n", posX);
-	
-	KeyFrame[FrameIndex].posX = posX;
-	KeyFrame[FrameIndex].posY = posY;
-	KeyFrame[FrameIndex].posZ = posZ;
-	
-	KeyFrame[FrameIndex].rotRodIzq = rotRodIzq;
-	
-
-	FrameIndex++;
-}
-
-void resetElements(void)
-{
-	posX = KeyFrame[0].posX;
-	posY = KeyFrame[0].posY;
-	posZ = KeyFrame[0].posZ;
-
-	rotRodIzq = KeyFrame[0].rotRodIzq;
-
-}
-
-void interpolation(void)
-{
-
-	KeyFrame[playIndex].incX = (KeyFrame[playIndex + 1].posX - KeyFrame[playIndex].posX) / i_max_steps;
-	KeyFrame[playIndex].incY = (KeyFrame[playIndex + 1].posY - KeyFrame[playIndex].posY) / i_max_steps;
-	KeyFrame[playIndex].incZ = (KeyFrame[playIndex + 1].posZ - KeyFrame[playIndex].posZ) / i_max_steps;
-	
-	KeyFrame[playIndex].rotInc = (KeyFrame[playIndex + 1].rotRodIzq - KeyFrame[playIndex].rotRodIzq) / i_max_steps;
-
-}
-
-
-
 
 int main()
 {
@@ -208,27 +148,24 @@ int main()
 	Model Segundo((char*)"Models/PROYECTO/Segundo_Piso.obj");
 	Model Techo((char*)"Models/PROYECTO/Techo_Piso.obj");
 	Model Ventanas((char*)"Models/PROYECTO/Ventanas.obj");
+	Model Puerta00((char*)"Models/PROYECTO/Puerta00.obj");
 
 	/*Objetos*/
 	Model Sillon01((char*)"Models/PROYECTO/SillonFlor.obj");
 	Model Sillon02((char*)"Models/PROYECTO/SillonTriple.obj");
+	Model Sillon03((char*)"Models/PROYECTO/SillonMadera01.obj");
 
+	Model Base_TV((char*)"Models/PROYECTO/Base_Tele.obj");
+	Model TV((char*)"Models/PROYECTO/Tele.obj");
+
+	Model Cuadro01((char*)"Models/PROYECTO/Cuadro01.obj");
+	Model Cuadro02((char*)"Models/PROYECTO/Cuadro02.obj");
+	Model Mecedora((char*)"Models/PROYECTO/Mecedora.obj");
+	Model Puerta01((char*)"Models/PROYECTO/Puerta01.obj");
 	// Build and compile our shader program
 
 	//Inicialización de KeyFrames
 	
-	for(int i=0; i<MAX_FRAMES; i++)
-	{
-		KeyFrame[i].posX = 0;
-		KeyFrame[i].incX = 0;
-		KeyFrame[i].incY = 0;
-		KeyFrame[i].incZ = 0;
-		KeyFrame[i].rotRodIzq = 0;
-		KeyFrame[i].rotInc = 0;
-	}
-
-
-
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] =
 	{
@@ -422,7 +359,7 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
-		animacion();
+		
 
 
 		// Clear the colorbuffer
@@ -450,14 +387,15 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "dirLight.specular"), 1.0f, 1.0f, 1.0f);
 
 
+
 		// Point light 1
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].position"), pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), LightP1.x, LightP1.y, LightP1.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), LightP1.x, LightP1.y, LightP1.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].ambient"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), 1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.9f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.8f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.009f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"), 0.008f);
 
 
 
@@ -467,17 +405,23 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].diffuse"), 1.0f, 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[1].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.0006f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.009f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].linear"), 0.009f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[1].quadratic"), 0.008f);
+
+
+		glm::vec3 lightColor;
+		lightColor.x = abs(Light1.x);
+		lightColor.y = abs( Light1.y);
+		lightColor.z = abs(Light1.z);
 
 		// Point light 3
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].position"), pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), 0.0f, 0.0f, 0.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 0.0f, 0.0f, 0.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].ambient"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].diffuse"), lightColor.x, lightColor.y, lightColor.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[2].specular"), 1.0f, 1.0f, 1.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 0.09f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].linear"), 4.4f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[2].quadratic"), 3.2f);
 
 		// Point light 4
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[3].position"), pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
@@ -604,34 +548,82 @@ int main()
 	//	Cabeza.Draw(lightingShader);
 	//
 	//	//Traslucidez
+		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Base.Draw(lightingShader);
 
-
+		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Primer.Draw(lightingShader);
 
-		
+		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Segundo.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Techo.Draw(lightingShader);
 
-
+		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Ventanas.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Puerta00.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Base_TV.Draw(lightingShader);
+
+		view = camera.GetViewMatrix();
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		TV.Draw(lightingShader);
 		/*Objetos*/
+
+		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sillon01.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sillon02.Draw(lightingShader);
 
+		view = camera.GetViewMatrix();
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Sillon03.Draw(lightingShader);
+
+		/*==================={ Animaciones }=====================*/
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3( 6.65f, 1.366f, -4.844f));
+		model = glm::translate(model, glm::vec3(0.0f, AnimCua01, 0.0f));
+		model = glm::rotate(model, glm::radians(rotCua01), glm::vec3(1.0f, 0.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Cuadro01.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(8.942f, 1.725f, -4.847));
+		model = glm::rotate(model, glm::radians(rotCua02), glm::vec3(0.0f, 0.0f, 1.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Cuadro02.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(8.906f, 0.265f, -1.995f));
+		model = glm::rotate(model, glm::radians(rotMece), glm::vec3(0.0f, 0.0f, 1.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mecedora.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		view = camera.GetViewMatrix();
+		model = glm::translate(model, glm::vec3(5.047f, 1.04f, 2.388f));
+		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Puerta01.Draw(lightingShader);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -714,78 +706,10 @@ int main()
 }
 
 
-void animacion()
-{
-
-		//Movimiento del personaje
-
-		if (play)
-		{
-			if (i_curr_steps >= i_max_steps) //end of animation between frames?
-			{
-				playIndex++;
-				if (playIndex>FrameIndex - 2)	//end of total animation?
-				{
-					printf("termina anim\n");
-					playIndex = 0;
-					play = false;
-				}
-				else //Next frame interpolations
-				{
-					i_curr_steps = 0; //Reset counter
-									  //Interpolation
-					interpolation();
-				}
-			}
-			else
-			{
-				//Draw animation
-				posX += KeyFrame[playIndex].incX;
-				posY += KeyFrame[playIndex].incY;
-				posZ += KeyFrame[playIndex].incZ;
-
-				rotRodIzq += KeyFrame[playIndex].rotInc;
-
-				i_curr_steps++;
-			}
-
-		}
-	}
-
-
 // Is called whenever a key is pressed/released via GLFW
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
-	if (keys[GLFW_KEY_L])
-	{
-		if (play == false && (FrameIndex > 1))
-		{
-
-			resetElements();
-			//First Interpolation				
-			interpolation();
-
-			play = true;
-			playIndex = 0;
-			i_curr_steps = 0;
-		}
-		else
-		{
-			play = false;
-		}
-
-	}
-
-	if (keys[GLFW_KEY_K])
-	{
-		if (FrameIndex<MAX_FRAMES)
-		{
-			saveFrame();
-		}
-
-		rot =-25.0f;//Variable que maneja el giro de la camara
-
-	}
+	
 
 
 	if (GLFW_KEY_ESCAPE == key && GLFW_PRESS == action)
@@ -813,6 +737,8 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 		else
 			LightP1 = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
+
+	
 }
 
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
@@ -837,53 +763,6 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 // Moves/alters the camera positions based on user input
 void DoMovement()
 {
-
-	if (keys[GLFW_KEY_1])
-	{
-		
-		movCamera = 0.01f;//Manda una velocidad de 0.01 a la camara automatica
-
-	}
-
-	if (keys[GLFW_KEY_2])
-	{
-		if (rotRodIzq<80.0f)
-			rotRodIzq += 1.0f;
-			
-	}
-
-	if (keys[GLFW_KEY_3])
-	{
-		if (rotRodIzq>-45)
-			rotRodIzq -= 1.0f;
-		
-	}
-
-	
-
-	//Mov Personaje
-	if (keys[GLFW_KEY_H])
-	{
-		posZ += 1;
-	}
-
-	if (keys[GLFW_KEY_Y])
-	{
-		posZ -= 1;
-	}
-
-	if (keys[GLFW_KEY_G])
-	{
-		posX -= 1;
-	}
-
-	if (keys[GLFW_KEY_J])
-	{
-		posX += 1;
-	}
-
-
-
 
 	// Camera controls
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
@@ -911,9 +790,89 @@ void DoMovement()
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 
+	
 
+	if (AnimCua01 >= -1.051f && rotCua01 == 0.0f) {
+		
+		AnimCua01 -= 0.05f;
+	}
+	else if (rotCua01  <= 85.0f ) {
+		rotCua01 += 5.0f;
+	}
+	else if (ContAnims01 <= 100.0f ) {
+		ContAnims01 += 0.5f;
+	}
+	else {
+		AnimCua01 = 0.0f;
+		rotCua01 = 0.0f;
+		ContAnims01 = 0.0f;
+	}
 
+	if (rotCua02 >= -45.0f) {
+		rotCua02 -= 2.5f;
+	}
+	else if(ContAnims02 <= 100.0f)
+	{
+		ContAnims02 += 0.5f;
+	}
+	else {
+		rotCua02 = 0.0f;
+		ContAnims02 = 0.0f;
+	}
 
+	if (ContAnims02 == ContAnims01 || ContAnims01 == ContAnims02) {
+		ContAnims01 = 0.0f;
+		ContAnims02 = 0.0f;
+	}
 
+	if (rotMece >= -5.0f && derMece == false) {
+		rotMece -= 0.2f;
+		if (rotMece < -5.0f) {
+			derMece = true;
+		}
+	}
+	else if(rotMece <= 5.0f && derMece == true){
+		rotMece += 0.2f;
+		if (rotMece > 5.0f) {
+			derMece = false;
+		}
+	}
+	/*else if () {
+
+	}
+	else {
+
+	}*/
+
+	if (keys[GLFW_KEY_SPACE])
+	{
+		Apagador = !Apagador;
+		if (Apagador)
+		{
+			Light1 = glm::vec3(1.0f, 1.0f, 1.0f);
+		}
+		else
+		{
+			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+		}
+	}
+
+	if (keys[GLFW_KEY_V]) {
+		//Puerta01_move = !Puerta01_move;
+		if (!Puerta01_move && rotPuerta01 < 90.0f) {
+			rotPuerta01 += 1.0f;
+			if (rotPuerta01 >= 90.0f) {
+				Puerta01_move = true;
+
+			}
+		}
+		else if (Puerta01_move && rotPuerta01 > 0.0f) {
+			rotPuerta01 -= 1.0f;
+			if (rotPuerta01 <= 0.0f) {
+				Puerta01_move = false;
+
+			}
+		}
+	}
 
 }
