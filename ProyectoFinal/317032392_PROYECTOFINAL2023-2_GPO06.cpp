@@ -141,21 +141,9 @@ int main()
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 	Shader Anim("Shaders/anim2.vs", "Shaders/anim2.frag");
 	Shader Ruido("Shaders/ruido.vs", "Shaders/ruido.frag");
-	/*Model BotaDer((char*)"Models/Personaje/bota.obj");
-	Model PiernaDer((char*)"Models/Personaje/piernader.obj");
-	Model PiernaIzq((char*)"Models/Personaje/piernaizq.obj");
-	Model Torso((char*)"Models/Personaje/torso.obj");
-	Model BrazoDer((char*)"Models/Personaje/brazoder.obj");
-	Model BrazoIzq((char*)"Models/Personaje/brazoizq.obj");
-	Model Cabeza((char*)"Models/Personaje/cabeza.obj");*/
-
-	Model Base((char*)"Models/PROYECTO/BASE_FACHADA.obj");
-	Model Primer((char*)"Models/PROYECTO/Primer_Piso.obj");
-	Model Segundo((char*)"Models/PROYECTO/Segundo_Piso.obj");
-	Model Techo((char*)"Models/PROYECTO/Techo_Piso.obj");
-	Model Ventanas((char*)"Models/PROYECTO/Ventanas.obj");
-	Model Puerta00((char*)"Models/PROYECTO/Puerta00.obj");
-	Model Cristal((char*)"Models/PROYECTO/Cristal.obj");
+	
+	/*Fachada*/
+	Model Fachada((char*)"Models/PROYECTO/Fachada.obj");
 
 	/*Objetos*/
 	Model Sillon01((char*)"Models/PROYECTO/SillonFlor.obj");
@@ -175,6 +163,9 @@ int main()
 
 	Model Agua((char*)"Models/PROYECTO/Picina.obj");
 	Model Pantalla((char*)"Models/PROYECTO/Pantalla.obj");
+
+	Model Dron((char*)"Models/PROYECTO/Dron.obj");
+	Model Elices((char*)"Models/PROYECTO/Elices.obj");
 	// Build and compile our shader program
 
 	//Inicialización de KeyFrames
@@ -349,12 +340,12 @@ int main()
 
 	// Load textures
 	vector<const GLchar*> faces;
-	faces.push_back("SkyBox/right.tga");
-	faces.push_back("SkyBox/left.tga");
-	faces.push_back("SkyBox/top.tga");
-	faces.push_back("SkyBox/bottom.tga");
-	faces.push_back("SkyBox/back.tga");
-	faces.push_back("SkyBox/front.tga");
+	faces.push_back("SkyBox/Proy/right.tga");
+	faces.push_back("SkyBox/Proy/left.tga");
+	faces.push_back("SkyBox/Proy/top.tga");
+	faces.push_back("SkyBox/Proy/bottom.tga");
+	faces.push_back("SkyBox/Proy/back.tga");
+	faces.push_back("SkyBox/Proy/front.tga");
 	
 	GLuint cubemapTexture = TextureLoading::LoadCubemap(faces);
 
@@ -561,31 +552,11 @@ int main()
 	//	Cabeza.Draw(lightingShader);
 	//
 	//	//Traslucidez
-		view = camera.GetViewMatrix();
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Base.Draw(lightingShader);
 
 		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Primer.Draw(lightingShader);
-
-		view = camera.GetViewMatrix();
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Segundo.Draw(lightingShader);
-
-		view = camera.GetViewMatrix();
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Techo.Draw(lightingShader);
-
-		view = camera.GetViewMatrix();
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Ventanas.Draw(lightingShader);
-
-		view = camera.GetViewMatrix();
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Puerta00.Draw(lightingShader);
+		Fachada.Draw(lightingShader);
 
 		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -626,7 +597,6 @@ int main()
 		/*==================={ Animaciones }=====================*/
 		model = glm::mat4(1);
 
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3( 6.65f, 1.366f, -4.844f));
 		model = glm::translate(model, glm::vec3(0.0f, AnimCua01, 0.0f));
 		model = glm::rotate(model, glm::radians(rotCua01), glm::vec3(1.0f, 0.0f, 0.0));
@@ -634,39 +604,39 @@ int main()
 		Cuadro01.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(8.942f, 1.725f, -4.847));
 		model = glm::rotate(model, glm::radians(rotCua02), glm::vec3(0.0f, 0.0f, 1.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Cuadro02.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(8.906f, 0.265f, -1.995f));
 		model = glm::rotate(model, glm::radians(rotMece), glm::vec3(0.0f, 0.0f, 1.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mecedora.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(5.047f, 1.04f, 2.388f));
 		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta01.Draw(lightingShader);
 		
 		model = glm::mat4(1);
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(5.897f, 2.786f, -4.938f));
 		model = glm::rotate(model, glm::radians(-rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta02.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(3.604f, 2.8f, -4.934f));
 		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta03.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		//model = glm::translate(model, glm::vec3(-37.627f, 13.486f, 6.829f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Dron.Draw(lightingShader);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -684,6 +654,7 @@ int main()
 		Anim.Use();
 		tiempo = glfwGetTime() * speed;
 		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+
 		modelLoc = glGetUniformLocation(Anim.Program, "model");
 		viewLoc = glGetUniformLocation(Anim.Program, "view");
 		projLoc = glGetUniformLocation(Anim.Program, "projection");
@@ -916,12 +887,7 @@ void DoMovement()
 			derMece = false;
 		}
 	}
-	/*else if () {
-
-	}
-	else {
-
-	}*/
+	
 
 	if (keys[GLFW_KEY_SPACE])
 	{
@@ -932,12 +898,12 @@ void DoMovement()
 		}
 		else
 		{
-			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
+			Light1 = glm::vec3(0);
 		}
 	}
 
 	if (keys[GLFW_KEY_V]) {
-		//Puerta01_move = !Puerta01_move;
+		
 		if (!Puerta01_move && rotPuerta01 < 90.0f) {
 			rotPuerta01 += 1.0f;
 			if (rotPuerta01 >= 90.0f) {
