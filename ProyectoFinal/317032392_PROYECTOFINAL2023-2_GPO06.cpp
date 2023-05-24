@@ -30,7 +30,6 @@
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
 void DoMovement();
-void animacion();
 
 // Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
@@ -40,6 +39,7 @@ int SCREEN_WIDTH, SCREEN_HEIGHT;
 Camera  camera(glm::vec3(6.0f, 2.0f, 6.0f));
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
+
 bool keys[1024];
 bool firstMouse = true;
 float range = 0.0f;
@@ -66,14 +66,21 @@ float rotPuerta01 = 0.0f, PantallaCo01 = 0.0f, PantallaCo02 = 0.0f;
 bool derMece = false, Apagador = false, Puerta01_move = false;
 
 float tiempo;
+float rotElices = 0.0f;
 
 float speed;
 float speed2;
+
+/*Variables Dron*/
+float PosicionX = 0.0f, PosicionZ = 0.0f, AnguloDron = 0.0f, rotDron = 0.0f;
+
+float PosicionY = 0.0f, PapaloteX = 0.0f, PapaloteZ = 0.0f;
+bool Derecha = false, PapaloteIzq = false;
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	glm::vec3(5,20,-6),
 	glm::vec3(5,20,6),
-	glm::vec3(7.5,2,-2.5),
+	glm::vec3(7.5,3,-2.5),
 	glm::vec3(0,0,0)
 };
 
@@ -85,18 +92,8 @@ int main()
 	// Init GLFW
 	glfwInit();
 
-
-
-
-	// Set all the required options for GLFW
-	/*(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);*/
-
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Practica 12", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "ProyectoFinal", nullptr, nullptr);
 
 	if (nullptr == window)
 	{
@@ -135,14 +132,15 @@ int main()
 	glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+	/*=============== We load shaders / Cargamos Shaders ========================*/
 	Shader lightingShader("Shaders/lighting.vs", "Shaders/lighting.frag");
 	Shader lampShader("Shaders/lamp.vs", "Shaders/lamp.frag");
 	Shader SkyBoxshader("Shaders/SkyBox.vs", "Shaders/SkyBox.frag");
 	Shader animShader("Shaders/anim.vs", "Shaders/anim.frag");
 	Shader Anim("Shaders/anim2.vs", "Shaders/anim2.frag");
-	Shader Ruido("Shaders/ruido.vs", "Shaders/ruido.frag");
 	
-	/*Fachada*/
+	/*=============== We load Models / Cargamos Modelos ========================*/
 	Model Fachada((char*)"Models/PROYECTO/Fachada.obj");
 
 	/*Objetos*/
@@ -162,14 +160,12 @@ int main()
 	Model Puerta03((char*)"Models/PROYECTO/Puerta03.obj");
 
 	Model Agua((char*)"Models/PROYECTO/Picina.obj");
-	Model Pantalla((char*)"Models/PROYECTO/Pantalla.obj");
+	Model Papalote((char*)"Models/PROYECTO/Papalote.obj");
 
 	Model Dron((char*)"Models/PROYECTO/Dron.obj");
 	Model Elices((char*)"Models/PROYECTO/Elices.obj");
 	// Build and compile our shader program
 
-	//Inicialización de KeyFrames
-	
 	// Set up vertex data (and buffer(s)) and attribute pointers
 	GLfloat vertices[] =
 	{
@@ -338,7 +334,7 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT,GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
 
-	// Load textures
+	// Load Skybox Textures / Carga las Texturas de Skybox
 	vector<const GLchar*> faces;
 	faces.push_back("SkyBox/Proy/right.tga");
 	faces.push_back("SkyBox/Proy/left.tga");
@@ -363,7 +359,7 @@ int main()
 		// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
 		glfwPollEvents();
 		DoMovement();
-		
+
 
 
 		// Clear the colorbuffer
@@ -415,7 +411,7 @@ int main()
 
 		glm::vec3 lightColor;
 		lightColor.x = abs(Light1.x);
-		lightColor.y = abs( Light1.y);
+		lightColor.y = abs(Light1.y);
 		lightColor.z = abs(Light1.z);
 
 		// Point light 3
@@ -461,103 +457,28 @@ int main()
 		GLint viewLoc = glGetUniformLocation(lightingShader.Program, "view");
 		GLint projLoc = glGetUniformLocation(lightingShader.Program, "projection");
 
-		// Pass the matrices to the shader
+		
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		// Bind diffuse map
-		//glBindTexture(GL_TEXTURE_2D, texture1);*/
-
-		// Bind specular map
-		/*glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);*/
-
 
 		glBindVertexArray(VAO);
 		glm::mat4 tmp = glm::mat4(1.0f); //Temp
 
 
 
-		//Carga de modelo 
-		//Personaje
+		/*==================={ Load Models / Carga Modelos }=====================*/
 
-		
+		//---Fachada
 		view = camera.GetViewMatrix();
 		glm::mat4 model(1);
-	//	tmp = model = glm::translate(model, glm::vec3(0, 1, 0));
-	//	model = glm::translate(model,glm::vec3(posX,posY,posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	Torso.Draw(lightingShader);
-
-	//
-
-	//	//Pierna Izq
-	//	view = camera.GetViewMatrix();
-	//	model = glm::translate(tmp, glm::vec3(-0.5f, 0.0f, -0.1f));
-	//	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-	//	model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-	//	PiernaDer.Draw(lightingShader);
-	////	Pie Izq
-	//	view = camera.GetViewMatrix();
-	//	model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	BotaDer.Draw(lightingShader);
-
-	//	//Pierna Der
-	//	view = camera.GetViewMatrix();
-	//	model = glm::translate(tmp, glm::vec3(0.5f, 0.0f, -0.1f));
-	//	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-
-	//	PiernaIzq.Draw(lightingShader);
-	//	//Pie Der
-	//	view = camera.GetViewMatrix();
-	//	model = glm::translate(model, glm::vec3(0, -0.9f, -0.2f));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	BotaDer.Draw(lightingShader);
-
-	//	//Brazo derecho
-	//	view = camera.GetViewMatrix();
-	//	model = glm::mat4(1);
-	//	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-	//	model = glm::rotate(model, glm::radians(-rotRodIzq), glm::vec3(1.0f, 0.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(-0.75f, 2.5f, 0));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	BrazoDer.Draw(lightingShader);
-
-	////	Brazo Izquierdo
-	//	view = camera.GetViewMatrix();
-	//	model = glm::mat4(1);
-	//	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0f));
-	//	model = glm::translate(model, glm::vec3(0.75f, 2.5f, 0));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	BrazoIzq.Draw(lightingShader);
-
-	//	//Cabeza
-	//	view = camera.GetViewMatrix();
-	//	model = glm::mat4(1);
-	//	model = glm::translate(model, glm::vec3(posX, posY, posZ));
-	//	model = glm::rotate(model, glm::radians(rot), glm::vec3(0.0f, 1.0f, 0.0));
-	//	model = glm::translate(model, glm::vec3(0.0f, 2.5f, 0));
-	//	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	//	glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-	//	Cabeza.Draw(lightingShader);
-	//
-	//	//Traslucidez
 
 		view = camera.GetViewMatrix();
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Fachada.Draw(lightingShader);
 
+
+		//--Objetos / Objects
 		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Base_TV.Draw(lightingShader);
@@ -565,7 +486,7 @@ int main()
 		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		TV.Draw(lightingShader);
-		/*Objetos*/
+	
 
 		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -583,21 +504,11 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sillon04.Draw(lightingShader);
 
-		//model = glm::mat4(1);
 
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		//glUniform1i(glGetUniformLocation(lightingShader.Program, "trans"), 1);
-		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 0.0, 0.25);
-		//
-		//Cristal.Draw(lightingShader);
-
-		//glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		//glUniform4f(glGetUniformLocation(lightingShader.Program, "colorAlpha"), 1.0, 1.0, 1.0, 1.0);
-
-		/*==================={ Animaciones }=====================*/
+		/*==================={ Simple Animations /Animaciones Simples }=====================*/
 		model = glm::mat4(1);
 
-		model = glm::translate(model, glm::vec3( 6.65f, 1.366f, -4.844f));
+		model = glm::translate(model, glm::vec3(6.65f, 1.366f, -4.844f));
 		model = glm::translate(model, glm::vec3(0.0f, AnimCua01, 0.0f));
 		model = glm::rotate(model, glm::radians(rotCua01), glm::vec3(1.0f, 0.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
@@ -615,12 +526,14 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mecedora.Draw(lightingShader);
 
+		/* ================= Interacciones  =====================*/
+
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(5.047f, 1.04f, 2.388f));
 		model = glm::rotate(model, glm::radians(rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta01.Draw(lightingShader);
-		
+
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(5.897f, 2.786f, -4.938f));
 		model = glm::rotate(model, glm::radians(-rotPuerta01), glm::vec3(0.0f, 1.0f, 0.0));
@@ -633,10 +546,41 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Puerta03.Draw(lightingShader);
 
+		/*=============== Complex animation / Animacione Complejas 01  =================*/
+
 		model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(-37.627f, 13.486f, 6.829f));
+		glm::mat4 Auxiliar(1);
+		
+		/* Hierarchy / Jerarquizacion */
+		Auxiliar = model = glm::translate(model, glm::vec3(PosicionX, 2.5f, PosicionZ));
+		Auxiliar = model = glm::rotate(model, glm::radians(rotDron), glm::vec3(0.0f, 1.0f, 0.0));
+
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Dron.Draw(lightingShader);
+
+		model = glm::translate(Auxiliar, glm::vec3(0.066f, 0.015f, 0.052f));
+		model = glm::rotate(model, glm::radians(rotElices), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Elices.Draw(lightingShader);
+
+		model = glm::translate(Auxiliar, glm::vec3(0.066f, 0.015f, -0.052f));
+		model = glm::rotate(model, glm::radians(rotElices), glm::vec3(0.0f, 1.0f, 0.0));
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Elices.Draw(lightingShader);
+
+		model = glm::translate(Auxiliar, glm::vec3(-0.066f, 0.015f, -0.052f));
+		model = glm::rotate(model, glm::radians(rotElices), glm::vec3(0.0f, 1.0f, 0.0));
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Elices.Draw(lightingShader);
+
+		model = glm::translate(Auxiliar, glm::vec3(-0.066f, 0.015f, 0.052f));
+		model = glm::rotate(model, glm::radians(rotElices), glm::vec3(0.0f, 1.0f, 0.0));
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Elices.Draw(lightingShader);
+
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -645,7 +589,7 @@ int main()
 		model = glm::scale(model, glm::vec3(1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "transparencia"), 0.0);
-		//objTras.Draw(lightingShader);
+	
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glBindVertexArray(0);
@@ -663,34 +607,19 @@ int main()
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+		// Dibuja Picina
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		//Box.Draw(Anim);
 		Agua.Draw(Anim);
-		glBindVertexArray(0);
+		
 
-		Ruido.Use();
-		tiempo = glfwGetTime() * speed2;
-		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		modelLoc = glGetUniformLocation(Ruido.Program, "model");
-		viewLoc = glGetUniformLocation(Ruido.Program, "view");
-		projLoc = glGetUniformLocation(Ruido.Program, "projection");
-		// Set matrices
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		/*=============== Complex animation 02 / Animacione Complejas 02  =================*/
 		model = glm::mat4(1);
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(Ruido.Program, "time"), tiempo);
-		//glUniform1f(glGetUniformLocation(Anim2.Program, "coords"), glm::vec2(0.0f, 1.0f));
-		glUniform1f(glGetUniformLocation(Ruido.Program, "textura01"), PantallaCo02);
-		glUniform1f(glGetUniformLocation(Ruido.Program, "textura02"), PantallaCo01);
-
-		//Box.Draw(Anim);
-		Pantalla.Draw(Ruido);
+		model = glm::translate(model, glm::vec3(PapaloteX, PosicionY, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Papalote.Draw(Anim);
 		glBindVertexArray(0);
+
 
 		// Also draw the lamp object, again binding the appropriate shader
 		lampShader.Use();
@@ -793,12 +722,21 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 			LightP1 = glm::vec3(0.0f, 0.0f, 0.0f);
 	}
 
-	
-}
+	/*==========================================
+	* =============== Apagador =================
+	* ========================================== */
 
+	if (keys[GLFW_KEY_SPACE])
+	{
+		Apagador = !Apagador;
+	}
+}
+	/*======================================
+	* Camera Controls / Control de Camara
+	* ====================================== */
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 {
-
+	// Change the direction of our camera / Altera la direccion de la camara
 	if (firstMouse)
 	{
 		lastX = xPos;
@@ -807,7 +745,7 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 	}
 
 	GLfloat xOffset = xPos - lastX;
-	GLfloat yOffset = lastY - yPos;  // Reversed since y-coordinates go from bottom to left
+	GLfloat yOffset = lastY - yPos; 
 
 	lastX = xPos;
 	lastY = yPos;
@@ -819,7 +757,9 @@ void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 void DoMovement()
 {
 
-	// Camera controls
+	/*======================================
+	* Camera Controls / Control de Camara
+	* ====================================== */
 	if (keys[GLFW_KEY_W] || keys[GLFW_KEY_UP])
 	{
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -845,17 +785,19 @@ void DoMovement()
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 
-	
+	/*=======================================================================
+	* simple frame animation01 / Animacion01 Simple Picture
+	* ======================================================================= */
 
 	if (AnimCua01 >= -1.051f && rotCua01 == 0.0f) {
 		
-		AnimCua01 -= 0.05f;
+		AnimCua01 -= 0.03f;
 	}
 	else if (rotCua01  <= 85.0f ) {
-		rotCua01 += 5.0f;
+		rotCua01 += 3.0f;
 	}
 	else if (ContAnims01 <= 100.0f ) {
-		ContAnims01 += 0.5f;
+		ContAnims01 += 0.2f;
 	}
 	else {
 		AnimCua01 = 0.0f;
@@ -863,44 +805,50 @@ void DoMovement()
 		ContAnims01 = 0.0f;
 	}
 
+	/*=======================================================================
+	* simple frame animation02 / Animacion02 Simple Picture
+	* ======================================================================= */
+
 	if (rotCua02 >= -45.0f) {
-		rotCua02 -= 2.5f;
+		rotCua02 -= 0.5f;
 	}
 	else if(ContAnims02 <= 100.0f)
 	{
-		ContAnims02 += 0.5f;
+		ContAnims02 += 0.2f;
 	}
 	else {
 		rotCua02 = 0.0f;
 		ContAnims02 = 0.0f;
 	}
 
+	/*==============================================================
+	* simple rocking animation03 / Animacion03 Simple Mecedora
+	* ============================================================== */
 	if (rotMece >= -5.0f && derMece == false) {
-		rotMece -= 0.2f;
+		rotMece -= 0.07f;
 		if (rotMece < -5.0f) {
 			derMece = true;
 		}
 	}
 	else if(rotMece <= 5.0f && derMece == true){
-		rotMece += 0.2f;
+		rotMece += 0.07f;
 		if (rotMece > 5.0f) {
 			derMece = false;
 		}
 	}
 	
+	
 
-	if (keys[GLFW_KEY_SPACE])
-	{
-		Apagador = !Apagador;
-		if (Apagador)
-		{
-			Light1 = glm::vec3(1.0f, 1.0f, 1.0f);
-		}
-		else
-		{
-			Light1 = glm::vec3(0);
-		}
+	if (Apagador){
+		Light1 = glm::vec3(5.0f, 5.0f, 5.0f);
 	}
+	else{
+		Light1 = glm::vec3(0);
+	}
+	
+	/*======================================================
+	* door interaction / Interaccion Puertas
+	* ====================================================== */
 
 	if (keys[GLFW_KEY_V]) {
 		
@@ -920,18 +868,50 @@ void DoMovement()
 		}
 	}
 
-	if ( PantallaCo02 <= 1.0f && PantallaCo01 <= 1.0f ) {
-		PantallaCo02 += 0.2f;
-	}
-	else if (PantallaCo02 > 1.0f){
-		PantallaCo01 += 0.2f;
-		PantallaCo02 = 0.0f;
-	}
-	else {
-		PantallaCo01 = 0.0f;
-		PantallaCo02 = 0.0f;
-	}
 
 	speed2 = 0.002f;
 	speed = 1.0f;
+	
+
+	/*===================================================
+	* Drone animation / Animacion Dron 
+	* ===================================================*/
+	if( rotElices <= 360.0f){
+		rotElices += 15.0f;
+	}else{
+		rotElices = 0.0f;
+	}
+	
+	if (AnguloDron <= 360.0f) {
+		AnguloDron += 0.02f;
+	}
+	else {
+		AnguloDron = 0.0f;
+		rotDron = 0.0f;
+	}
+
+
+	PosicionX = -2.9f + 1.1f * cos(AnguloDron);
+	PosicionZ =  1.5f + 1.1f * sin(AnguloDron);
+
+	/*=======================================================
+	* kite animation / Animacion Papalote
+	* =======================================================*/
+	
+
+	if (PapaloteX  <= 25.0f && Derecha == false) {
+		PapaloteX += 0.05f;
+		if (PapaloteX > 25.0f) {
+			Derecha = true;
+		}
+	}
+	else {
+		PapaloteX -= 0.05f;
+		if (PapaloteX < 0.0f) {
+			Derecha = false;
+		}
+	}
+
+	PosicionY = 4*sin(0.15 * PapaloteX);
+		
 }
