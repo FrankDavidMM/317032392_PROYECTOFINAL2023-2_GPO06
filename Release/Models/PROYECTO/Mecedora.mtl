@@ -1,0 +1,340 @@
+newmtl Cuadro:phong5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd BASE_TELE.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Cuadro:phongE1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Textura_Agua.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+newmtl Estufa:phong2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Metal_negro.png
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Mesa:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Metal_negro.png
+Ni 1.00
+newmtl Mesa:lambert3SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Vidrio.png
+Ni 1.00
+newmtl Microondas:lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Blanco.png
+Ni 1.00
+newmtl Microondas:lambert6SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Negro.png
+Ni 1.00
+newmtl Piso_MosaicosSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd MOSAICOS.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl Refrigerador:lambert7SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Blanco.png
+Ni 1.00
+newmtl Silla:lambert23SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Cabbello.png
+Ni 1.00
+newmtl Silla:lambert24SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Piel.png
+Ni 1.00
+newmtl Silla:lambert25SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Sueter.png
+Ni 1.00
+newmtl Silla:lambert26SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Pantalon.png
+Ni 1.00
+newmtl Silla:lambert27SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Zapatos.png
+Ni 1.00
+newmtl Silla:lambert28SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Agujeta.png
+Ni 1.00
+newmtl Silla:lambert29SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Wood2.png
+Ni 1.00
+newmtl Silla:phong8SG
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.03 0.03 0.03
+Ns 18.00
+newmtl SillonFlor:PrimerPiso
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Textura_Paredes.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl cupboard:lambert2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Wood.png
+Ni 1.00
+newmtl cupboard:phong1SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Gold.png
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl phong15SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURAFLORES03.png
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Flores.png
+Ns 18.00
+newmtl phong16SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURAMADERA.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks MARCO.png
+Ns 18.00
+newmtl phong17SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Columnas.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Columnas_Spe.jpg
+Ns 18.00
+newmtl phong18SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd MOSAICOS.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong19SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURA_BaseTrisillon.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Base_Specular.jpg
+Ns 18.00
+newmtl phong21SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Almohada.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Almohada_Specular.png
+Ns 18.00
+newmtl phong23SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURABASE.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Base_Specular.jpg
+Ns 18.00
+newmtl phong25SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Textura_Paredes.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Cemento_Paredes_Spe.jpg
+Ns 18.00
+newmtl phong27SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Ladrillos_AMARILLOS.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Amarillo_Spe.jpg
+Ns 18.00
+newmtl phong28SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Ladrillos.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Ladrillos_Rojos_Spe.jpg
+Ns 18.00
+newmtl phong30SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd FLORMITAD02.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks PINTURA.png
+Ns 18.00
+newmtl phong32SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURA_TELE.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Tele_Specular.jpg
+Ns 18.00
+newmtl phong34SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Textura_Ruido_2.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong36SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd ATEXTURA_VENTANA.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong38SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd TEXTURANEGROPLASTICO.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong39SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd ATEXTURA_VENTANA.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong41SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd cortina.png
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phong43SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd GOKU.jpg
+Ni 1.00
+Ks 0.50 0.50 0.50
+Ns 18.00
+newmtl phongE5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd CEMENTONEGROTEXTURA.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+map_Ks Escaleras_Spe.jpg
