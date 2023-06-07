@@ -61,33 +61,34 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 // Keyframes
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
 
-float AnimCua01 = 0.0f, rotCua01 = 0.0f, ContAnims01 = 0.0f, rotCua02 = 0.0f, ContAnims02 = 0.0f, rotMece = 0.0f;
-float rotPuerta01 = 0.0f, PantallaCo01 = 0.0f, PantallaCo02 = 0.0f;
-bool derMece = false, Apagador = false, Puerta01_move = false;
+float rotMece = 0.0f;		//Guarda el angulo de la mecedora
+float rotPuerta01 = 0.0f;
+bool derMece = false;
+bool Apagador = false;
+bool Puerta01_move = false;
 
 float tiempo;
-float rotElices = 0.0f;
 
 float speed;
 float speed2;
 
 /*Variables Dron*/
-float PosicionX = 0.0f, PosicionZ = 0.0f, AnguloDron = 0.0f, rotDron = 0.0f;
-
-float PosicionY = 0.0f, PapaloteX = 0.0f, PapaloteZ = 0.0f;
-bool Derecha = false, PapaloteIzq = false;
+float rotElices = 0.0f; //Guarda el angulo de Jiro las elices
+float PosicionX = 0.0f; //Guarda La posicion X del dron
+float PosicionZ = 0.0f; //Guarda La posicion Z del dron
+float AnguloDron = 0.0f;//Guardael Angulo de la posicion del dron para calcular X y Z
 
 /*============================================
 * Animaciones
 *=============================================*/
 
 // Animacion Refri
-float rotRefri = 0.0f;
-bool RefriAbierto = false;
+float rotRefri = 0.0f;     //Los Grados en los que girara la puerta del Refri
+bool RefriAbierto = false; //Para saber si esta abierta o cerrada
 
 // Animacion Microondas
-float rotMicro = 0.0f;
-bool MicroAbierto = false;
+float rotMicro = 0.0f;     //Los Grados en los que girara la puerta del Micro
+bool MicroAbierto = false; //Para saber si esta abierta o cerrada
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -624,7 +625,6 @@ int main()
 		
 		/* Hierarchy / Jerarquizacion */
 		Auxiliar = model = glm::translate(model, glm::vec3(PosicionX, 2.5f, PosicionZ));
-		Auxiliar = model = glm::rotate(model, glm::radians(rotDron), glm::vec3(0.0f, 1.0f, 0.0));
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Dron.Draw(lightingShader);
@@ -949,7 +949,6 @@ void DoMovement()
 	}
 	else {
 		AnguloDron = 0.0f;
-		rotDron = 0.0f;
 	}
 
 
