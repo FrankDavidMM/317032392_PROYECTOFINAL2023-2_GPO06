@@ -36,7 +36,7 @@ const GLuint WIDTH = 800, HEIGHT = 600;
 int SCREEN_WIDTH, SCREEN_HEIGHT;
 
 // Camera
-Camera  camera(glm::vec3(6.0f, 2.0f, 6.0f));
+Camera  camera(glm::vec3(6.0f, 2.0f, 6.0f));//Creamos nuestra camara y guarda sus coordenadas
 GLfloat lastX = WIDTH / 2.0;
 GLfloat lastY = HEIGHT / 2.0;
 
@@ -61,10 +61,13 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 // Keyframes
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
 
+bool animActive = false;
+
 float rotMece = 0.0f;		//Guarda el angulo de la mecedora
-float rotPuerta01 = 0.0f;
-bool derMece = false;
-bool Apagador = false;
+bool derMece = false;		//Si Llego a su limite el Dron 
+
+float rotPuerta01 = 0.0f;	//Para abrir y cerrar Puertas
+bool Apagador = false;		//Apagar y encender luz
 bool Puerta01_move = false;
 
 float tiempo;
@@ -73,7 +76,7 @@ float speed;
 float speed2;
 
 /*Variables Dron*/
-float rotElices = 0.0f; //Guarda el angulo de Jiro las elices
+float rotElices = 0.0f; //Guarda el angulo de Giro las elices
 float PosicionX = 0.0f; //Guarda La posicion X del dron
 float PosicionZ = 0.0f; //Guarda La posicion Z del dron
 float AnguloDron = 0.0f;//Guardael Angulo de la posicion del dron para calcular X y Z
@@ -795,6 +798,11 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	{
 		Apagador = !Apagador;
 	}
+
+	if (keys[GLFW_KEY_B])
+	{
+		animActive = !animActive;
+	}
 }
 	/*======================================
 	* Camera Controls / Control de Camara
@@ -850,70 +858,12 @@ void DoMovement()
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 
-	/*==============================================================
-	* simple rocking animation01 / Animacion01 Simple Mecedora
-	* ============================================================== */
-	if (rotMece >= -5.0f && derMece == false) {
-		rotMece -= 0.07f;
-		if (rotMece < -5.0f) {
-			derMece = true;
-		}
-	}
-	else if (rotMece <= 5.0f && derMece == true) {
-		rotMece += 0.07f;
-		if (rotMece > 5.0f) {
-			derMece = false;
-		}
-	}
-
-
-
-	if (Apagador) {
-		Light1 = glm::vec3(5.0f, 5.0f, 5.0f);
-	}
-	else {
-		Light1 = glm::vec3(0);
-	}
-
-	/*=======================================================================
-	* Animacion Refrigerador
-	* ======================================================================= */
-	if ( rotRefri <= 50.0f && RefriAbierto == false) {
-		rotRefri += 0.07f;
-		if (rotRefri > 50.0f) {
-			RefriAbierto = true;
-		}
-	}
-	else if (rotRefri >= 0.0f && RefriAbierto == true) {
-		rotRefri -= 0.07f;
-		if (rotRefri < 0.0f) {
-			RefriAbierto = false;
-		}
-	}
-
-	/*=======================================================================
-	* 
-	* ======================================================================= */
-	
-	if (rotMicro >= -50.0f && MicroAbierto == false) {
-		rotMicro -= 0.07f;
-		if (rotMicro < -50.0f) {
-			MicroAbierto = true;
-		}
-	}
-	else if (rotMicro <= 0.0f && MicroAbierto == true) {
-		rotMicro += 0.07f;
-		if (rotMicro > 0.0f) {
-			MicroAbierto = false;
-		}
-	}
-
 	/*======================================================
 	* door interaction / Interaccion Puertas
 	* ====================================================== */
 
 	if (keys[GLFW_KEY_V]) {
-		
+
 		if (!Puerta01_move && rotPuerta01 < 90.0f) {
 			rotPuerta01 += 1.0f;
 			if (rotPuerta01 >= 90.0f) {
@@ -933,27 +883,85 @@ void DoMovement()
 
 	speed2 = 0.002f;
 	speed = 1.0f;
-	
 
-	/*===================================================
-	* Drone animation / Animacion Dron 
-	* ===================================================*/
-	if( rotElices <= 360.0f){
-		rotElices += 15.0f;
-	}else{
-		rotElices = 0.0f;
-	}
-	
-	if (AnguloDron <= 360.0f) {
-		AnguloDron += 0.02f;
+
+	if (Apagador) {
+		Light1 = glm::vec3(5.0f, 5.0f, 5.0f);
 	}
 	else {
-		AnguloDron = 0.0f;
+		Light1 = glm::vec3(0);
 	}
 
+	if (animActive) {
+		/*==============================================================
+		* simple rocking animation01 / Animacion01 Simple Mecedora
+		* ============================================================== */
+		if (rotMece >= -5.0f && derMece == false) {
+			rotMece -= 0.07f;
+			if (rotMece < -5.0f) {
+				derMece = true;
+			}
+		}
+		else if (rotMece <= 5.0f && derMece == true) {
+			rotMece += 0.07f;
+			if (rotMece > 5.0f) {
+				derMece = false;
+			}
+		}
 
-	PosicionX = -2.9f + 1.1f * cos(AnguloDron);
-	PosicionZ =  1.5f + 1.1f * sin(AnguloDron);
+		/*=======================================================================
+		* Animacion Refrigerador
+		* ======================================================================= */
+		if (rotRefri <= 50.0f && RefriAbierto == false) {
+			rotRefri += 0.07f;
+			if (rotRefri > 50.0f) {
+				RefriAbierto = true;
+			}
+		}
+		else if (rotRefri >= 0.0f && RefriAbierto == true) {
+			rotRefri -= 0.07f;
+			if (rotRefri < 0.0f) {
+				RefriAbierto = false;
+			}
+		}
 
+		/*=======================================================================
+		* Animacion Microondas
+		* ======================================================================= */
+
+		if (rotMicro >= -50.0f && MicroAbierto == false) {
+			rotMicro -= 0.07f;
+			if (rotMicro < -50.0f) {
+				MicroAbierto = true;
+			}
+		}
+		else if (rotMicro <= 0.0f && MicroAbierto == true) {
+			rotMicro += 0.07f;
+			if (rotMicro > 0.0f) {
+				MicroAbierto = false;
+			}
+		}
+
+		/*===================================================
+		* Drone animation / Animacion Dron
+		* ===================================================*/
+		if (rotElices <= 360.0f) {
+			rotElices += 15.0f;
+		}
+		else {
+			rotElices = 0.0f;
+		}
+
+		if (AnguloDron <= 360.0f) {
+			AnguloDron += 0.02f;
+		}
+		else {
+			AnguloDron = 0.0f;
+		}
+
+
+		PosicionX = -2.9f + 1.1f * cos(AnguloDron);
+		PosicionZ = 1.5f + 1.1f * sin(AnguloDron);
+	}
 		
 }
