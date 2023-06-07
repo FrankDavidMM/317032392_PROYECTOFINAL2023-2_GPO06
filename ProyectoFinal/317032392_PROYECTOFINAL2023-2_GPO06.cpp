@@ -76,6 +76,19 @@ float PosicionX = 0.0f, PosicionZ = 0.0f, AnguloDron = 0.0f, rotDron = 0.0f;
 
 float PosicionY = 0.0f, PapaloteX = 0.0f, PapaloteZ = 0.0f;
 bool Derecha = false, PapaloteIzq = false;
+
+/*============================================
+* Animaciones
+*=============================================*/
+
+// Animacion Refri
+float rotRefri = 0.0f;
+bool RefriAbierto = false;
+
+// Animacion Microondas
+float rotMicro = 0.0f;
+bool MicroAbierto = false;
+
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
 	glm::vec3(5,20,-6),
@@ -159,8 +172,19 @@ int main()
 	Model Puerta02((char*)"Models/PROYECTO/Puerta02.obj");
 	Model Puerta03((char*)"Models/PROYECTO/Puerta03.obj");
 
+	Model Refri((char*)"Models/PROYECTO/Refrigerador.obj");
+	Model PuertaRefri01((char*)"Models/PROYECTO/PuertaRefri01.obj");
+	Model PuertaRefri02((char*)"Models/PROYECTO/PuertaRefri02.obj");
+	
+	Model Mesa((char*)"Models/PROYECTO/Mesa.obj");
+	Model Alacena((char*)"Models/PROYECTO/Alacena.obj");
+	Model Micro((char*)"Models/PROYECTO/Microondas.obj");
+	Model PuertaMicro((char*)"Models/PROYECTO/PuertaMicro.obj");
+	Model Estufa((char*)"Models/PROYECTO/Estufa.obj");
+
 	Model Agua((char*)"Models/PROYECTO/Picina.obj");
-	Model Papalote((char*)"Models/PROYECTO/Papalote.obj");
+
+	Model Persona((char*)"Models/PROYECTO/Personaje.obj");
 
 	Model Dron((char*)"Models/PROYECTO/Dron.obj");
 	Model Elices((char*)"Models/PROYECTO/Elices.obj");
@@ -503,28 +527,71 @@ int main()
 		view = camera.GetViewMatrix();
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Sillon04.Draw(lightingShader);
-
-
-		/*==================={ Simple Animations /Animaciones Simples }=====================*/
+		
 		model = glm::mat4(1);
-
 		model = glm::translate(model, glm::vec3(6.65f, 1.366f, -4.844f));
-		model = glm::translate(model, glm::vec3(0.0f, AnimCua01, 0.0f));
-		model = glm::rotate(model, glm::radians(rotCua01), glm::vec3(1.0f, 0.0f, 0.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Cuadro01.Draw(lightingShader);
 
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(8.942f, 1.725f, -4.847));
-		model = glm::rotate(model, glm::radians(rotCua02), glm::vec3(0.0f, 0.0f, 1.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Cuadro02.Draw(lightingShader);
 
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(8.906f, 0.265f, -1.995f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Mesa.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Alacena.Draw(lightingShader);
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Estufa.Draw(lightingShader);
+
+		/*==================={ Simple Animations /Animaciones Simples }=====================*/
+		
+		/*================= Mecedora Animacion01 =================*/
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(8.979f, 0.262f, -1.994f));
 		model = glm::rotate(model, glm::radians(rotMece), glm::vec3(0.0f, 0.0f, 1.0));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		Mecedora.Draw(lightingShader);
+
+		/*============ Refrigerador Animacion02 ================*/
+
+		model = glm::mat4(1);
+		glm::mat4 Aux01(1);
+		Aux01 = model = glm::translate(model, glm::vec3(-0.3f, 1.01f, -3.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Refri.Draw(lightingShader);
+
+		/*============= Puerta01 ==============*/
+		model = glm::translate(Aux01, glm::vec3(0.23f, 0.0f, -0.2f));
+		model = glm::rotate(model, glm::radians(rotRefri), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PuertaRefri01.Draw(lightingShader);
+
+		/*============= Puerta02 ===============*/
+
+		model = glm::translate(Aux01, glm::vec3(0.23f, 0.0f, -0.2f));
+		model = glm::rotate(model, glm::radians(rotRefri), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PuertaRefri02.Draw(lightingShader);
+
+		/**/
+		model = glm::mat4(1);
+		glm::mat4 Aux02(1);
+		Aux02 = model = glm::translate(model, glm::vec3(1.0f, 1.18f, -4.5f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Micro.Draw(lightingShader);
+
+		model = glm::translate(Aux02, glm::vec3(-0.234f, 0.0f, 0.132f));
+		model = glm::rotate(model, glm::radians(rotMicro), glm::vec3(0.0f, 1.0f, 0.0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		PuertaMicro.Draw(lightingShader);
 
 		/* ================= Interacciones  =====================*/
 
@@ -547,6 +614,10 @@ int main()
 		Puerta03.Draw(lightingShader);
 
 		/*=============== Complex animation / Animacione Complejas 01  =================*/
+
+		model = glm::mat4(1);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		Persona.Draw(lightingShader);
 
 		model = glm::mat4(1);
 		glm::mat4 Auxiliar(1);
@@ -612,12 +683,6 @@ int main()
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
 		Agua.Draw(Anim);
 		
-
-		/*=============== Complex animation 02 / Animacione Complejas 02  =================*/
-		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(PapaloteX, PosicionY, 0.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		Papalote.Draw(Anim);
 		glBindVertexArray(0);
 
 
@@ -785,44 +850,8 @@ void DoMovement()
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	}
 
-	/*=======================================================================
-	* simple frame animation01 / Animacion01 Simple Picture
-	* ======================================================================= */
-
-	if (AnimCua01 >= -1.051f && rotCua01 == 0.0f) {
-		
-		AnimCua01 -= 0.03f;
-	}
-	else if (rotCua01  <= 85.0f ) {
-		rotCua01 += 3.0f;
-	}
-	else if (ContAnims01 <= 100.0f ) {
-		ContAnims01 += 0.2f;
-	}
-	else {
-		AnimCua01 = 0.0f;
-		rotCua01 = 0.0f;
-		ContAnims01 = 0.0f;
-	}
-
-	/*=======================================================================
-	* simple frame animation02 / Animacion02 Simple Picture
-	* ======================================================================= */
-
-	if (rotCua02 >= -45.0f) {
-		rotCua02 -= 0.5f;
-	}
-	else if(ContAnims02 <= 100.0f)
-	{
-		ContAnims02 += 0.2f;
-	}
-	else {
-		rotCua02 = 0.0f;
-		ContAnims02 = 0.0f;
-	}
-
 	/*==============================================================
-	* simple rocking animation03 / Animacion03 Simple Mecedora
+	* simple rocking animation01 / Animacion01 Simple Mecedora
 	* ============================================================== */
 	if (rotMece >= -5.0f && derMece == false) {
 		rotMece -= 0.07f;
@@ -830,22 +859,55 @@ void DoMovement()
 			derMece = true;
 		}
 	}
-	else if(rotMece <= 5.0f && derMece == true){
+	else if (rotMece <= 5.0f && derMece == true) {
 		rotMece += 0.07f;
 		if (rotMece > 5.0f) {
 			derMece = false;
 		}
 	}
-	
-	
 
-	if (Apagador){
+
+
+	if (Apagador) {
 		Light1 = glm::vec3(5.0f, 5.0f, 5.0f);
 	}
-	else{
+	else {
 		Light1 = glm::vec3(0);
 	}
+
+	/*=======================================================================
+	* Animacion Refrigerador
+	* ======================================================================= */
+	if ( rotRefri <= 50.0f && RefriAbierto == false) {
+		rotRefri += 0.07f;
+		if (rotRefri > 50.0f) {
+			RefriAbierto = true;
+		}
+	}
+	else if (rotRefri >= 0.0f && RefriAbierto == true) {
+		rotRefri -= 0.07f;
+		if (rotRefri < 0.0f) {
+			RefriAbierto = false;
+		}
+	}
+
+	/*=======================================================================
+	* 
+	* ======================================================================= */
 	
+	if (rotMicro >= -50.0f && MicroAbierto == false) {
+		rotMicro -= 0.07f;
+		if (rotMicro < -50.0f) {
+			MicroAbierto = true;
+		}
+	}
+	else if (rotMicro <= 0.0f && MicroAbierto == true) {
+		rotMicro += 0.07f;
+		if (rotMicro > 0.0f) {
+			MicroAbierto = false;
+		}
+	}
+
 	/*======================================================
 	* door interaction / Interaccion Puertas
 	* ====================================================== */
@@ -894,24 +956,5 @@ void DoMovement()
 	PosicionX = -2.9f + 1.1f * cos(AnguloDron);
 	PosicionZ =  1.5f + 1.1f * sin(AnguloDron);
 
-	/*=======================================================
-	* kite animation / Animacion Papalote
-	* =======================================================*/
-	
-
-	if (PapaloteX  <= 25.0f && Derecha == false) {
-		PapaloteX += 0.05f;
-		if (PapaloteX > 25.0f) {
-			Derecha = true;
-		}
-	}
-	else {
-		PapaloteX -= 0.05f;
-		if (PapaloteX < 0.0f) {
-			Derecha = false;
-		}
-	}
-
-	PosicionY = 4*sin(0.15 * PapaloteX);
 		
 }
