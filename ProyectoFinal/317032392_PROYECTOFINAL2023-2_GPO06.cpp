@@ -61,7 +61,7 @@ GLfloat lastFrame = 0.0f;  	// Time of last frame
 // Keyframes
 float posX =PosIni.x, posY = PosIni.y, posZ = PosIni.z, rotRodIzq = 0;
 
-bool animActive = false;
+bool animActive = false;	//Para Activar y desactivar las animaciones
 
 float rotMece = 0.0f;		//Guarda el angulo de la mecedora
 bool derMece = false;		//Si Llego a su limite el Dron 
